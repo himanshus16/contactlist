@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container{
+            border: 1px solid black;
+            width: 40%;
+            margin: auto;
+            padding: 20px;
+        }
+        .heading{
+            width: fit-content;
+            margin: auto;
+            padding: 20px;
+            text-shadow: 2px 2px gray;
+        }
+        .heading:hover{
+            font-size: 26px;
+        }
+        .save-number{
+            width: 300px;
+            padding: 20px;
+            margin: auto;
+        }
+        .save-number #name , #number{
+            margin: 10px;
+            width: 90%;
+            height: 20px;
+            border: none;
+            background: palevioletred;
+            border-radius: 8px;
+        }
+        .save-number #sbtn{
+            width: 80%;
+            border: none;
+            background: rgb(68, 68, 138);
+            margin: 22px;
+            border-radius: 10px;
+            color: white;
+        }
+    </style>
+
+</head>
+<script>
+    function savedata(){
+    var cname=document.getElementById('name').value.toUpperCase();
+    var cnum=document.getElementById('number').value;
+    var noti=document.getElementById('notification');
+    if(cname == "" || cnum == ""){
+        noti.innerHTML="PLEASE ENTER DETAILS !";
+        noti.style.color='red';
+    }
+    else{
+        localStorage.setItem(cname,cnum)
+        noti.innerHTML="CONTACT SAVED SUCESSFULL !";
+        noti.style.color='green';
+        cname.innerHTML="";
+        cnum.innerHTML="";
+    }
+    setInterval(() => {
+        noti.innerHTML=""
+    }, 2000);
+}
+function display(){
+    let displaydetail=document.getElementById("displaycontact");
+    let displayoutput=document.getElementById("displaycontact");
+    let getcontactname=document.getElementById("getname").value.toUpperCase();
+
+    let output=localStorage.getItem(getcontactname);
+    if(output == null){
+        displaydetail.innerHTML = `<font color=red>NO CONTACT NAMED ${getcontactname}`;
+    }
+    else{
+        displaydetail.innerHTML = `${getcontactname} : +91${output}`;
+    }
+    // displaydetail.innerHTML = `${getcontactname} : ${output == null ? "(NO RESULT)" : `+91${output}`}`;
+
+    getcontactname="";
+}
+function allcontact(){
+    // document.getElementById('displaycontact').innerHTML=""
+    document.getElementById('list').innerHTML=""
+    for(var i=0;i<localStorage.length;i++){
+        x= localStorage.key(i);
+        y= localStorage.getItem(x);
+        document.getElementById('list').innerHTML += x + ":  "+ y +"<br>"
+    }
+}
+function del(){
+    var i=0
+    let delcontactname=document.getElementById('delname').value.toUpperCase();
+    let delcontactkey=localStorage.key(i);
+    if(delcontactkey == delcontactname ){
+        localStorage.removeItem(delcontactkey);
+        document.getElementById('msg').innerHTML=`<font color=green> CONTACT DELETED SUCESSFULLY ${delcontactname}`
+    }
+    else{
+        document.getElementById('msg').innerHTML=`<font color=red> NO CONTACT NAME ${delcontactname}`
+    }
+}
+function reset(){
+    location.reload();
+}
+</script>
+<body>
+        <div class="container"> 
+            <!-- <button onclick="reset()">RESET</button> -->
+            <h2 class="heading">CONTACT BOOK</h2>
+            <div class="save-number">
+                <input type="text" id="name" placeholder="ENTER NAME" maxlength="10">
+    
+                <input type="phone" id="number" placeholder="ENTER NUMBER" maxlength="10" required>
+    
+                <input type="submit" onclick="savedata()" value="SAVE" id="sbtn">
+                <p id="notification"></p>
+            </div>
+
+            <div class="number-detail">
+                <h2 class="get-contact-heading">GET CONTACT DETAIL</h2>
+                <div class="get-number">
+                    <input type="text" id="getname" placeholder="SEARCH NAME">
+                    <!-- <input type="text" id="getnum" placeholder="SEARCH NUMBER"> -->
+                    <input type="submit" onclick="display()" value="SEARCH" id="getcontact">
+                    <input type="submit" onclick="allcontact()" value="SEE LIST" id="contact-list">
+                </div>
+                <p id="displaycontact"></p>
+                <div id="list">
+                </div>
+
+                <div>
+                    <h2>DELETE CONTACT</h2>
+                    <input type="text" id="delname" placeholder="DELETE CONTACT">
+                    <input type="submit" onclick="del()" value="DELETE">
+                    <p id="msg"></p>
+                </div>
+            </div>
+        </div>
+</body>
+</html>
